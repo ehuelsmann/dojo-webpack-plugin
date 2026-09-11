@@ -1,5 +1,5 @@
 module.exports = function(env) {
-	it("env should specify fooptah", function() {
+	it("env should specify foopath", function() {
 		env.foopath.should.be.eql("test/foo");
 	});
 	return {
