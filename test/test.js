@@ -37,11 +37,16 @@ var webpackMajorVersion = parseInt(require("webpack/package.json").version.split
 var testGroups = {
 	default: {},
 	djPropRenamed: {pluginOptions: {requireFnPropName: "djPropRenamed"}},
-	async: {pluginOptions: {async:true}}
+	async: {pluginOptions: {async:true}},
+	esm: {pluginOptions: {outputType: "esm"}}
 };
 
 describe("TestCases", () => {
 	runTestCases("TestCases");
+});
+
+describe("TestCasesESM", () => {
+	runTestCases("TestCasesESM");
 });
 
 describe("ErrorTestCases", () => {

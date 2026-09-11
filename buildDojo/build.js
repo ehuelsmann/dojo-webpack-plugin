@@ -15,10 +15,12 @@
  */
 const path = require("path");
 const fork = require("child_process").fork;
+const {rewriteLoaderOutputFile} = require("./loaderOutput");
 
 const dojoPath = global.process.argv.length > 2 && global.process.argv[2];
 const releaseDir = global.process.argv.length > 3 && global.process.argv[3];
 const featureOverrides = global.process.argv.length > 4 && global.process.argv[4]  || "{}";
+const outputType = global.process.argv.length > 5 && global.process.argv[5] || "cjs";
 if (!dojoPath) {
 	throw Error("Path to dojo not specified");
 }
@@ -42,5 +44,13 @@ const ls = fork(
 );
 
 ls.on('close', (code) => {
+  if (code === 0) {
+    try {
+      rewriteLoaderOutputFile(path.join(releaseDir, "dojo/dojo.js"), outputType);
+    } catch (err) {
+      console.error(err);
+      process.exitCode = 1;
+    }
+  }
   console.log('child process exited with code ' + code);
 });
