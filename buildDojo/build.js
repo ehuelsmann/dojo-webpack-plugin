@@ -15,7 +15,6 @@
  */
 const path = require("path");
 const fork = require("child_process").fork;
-const {rewriteLoaderOutputFile} = require("./loaderOutput");
 
 const dojoPath = global.process.argv.length > 2 && global.process.argv[2];
 const releaseDir = global.process.argv.length > 3 && global.process.argv[3];
@@ -39,18 +38,12 @@ const ls = fork(
 		"--releaseDir",
 		path.resolve(releaseDir),
 		"--has",
-		featureOverrides
+		featureOverrides,
+		"--outputType",
+		outputType
 	]
 );
 
 ls.on('close', (code) => {
-  if (code === 0) {
-    try {
-      rewriteLoaderOutputFile(path.join(releaseDir, "dojo/dojo.js"), outputType);
-    } catch (err) {
-      console.error(err);
-      process.exitCode = 1;
-    }
-  }
   console.log('child process exited with code ' + code);
 });

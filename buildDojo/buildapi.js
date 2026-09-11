@@ -15,7 +15,6 @@
  */
 const path = require("path");
 const fork = require("child_process").fork;
-const {rewriteLoaderOutputFile} = require("./loaderOutput");
 
 /*
  * parameters:
@@ -38,7 +37,9 @@ function buildLoader(params) {
 			"--releaseDir",
 			path.resolve(params.releaseDir),
 			"--has",
-			JSON.stringify(params.has || {})
+			JSON.stringify(params.has || {}),
+			"--outputType",
+			params.outputType || "cjs"
 		],
 		{
 			silent: true
@@ -58,12 +59,7 @@ function buildLoader(params) {
 		});
 		ls.on('close', code => {
 			if (code == 0) {
-				try {
-					rewriteLoaderOutputFile(path.join(params.releaseDir, "dojo/dojo.js"), params.outputType);
-					resolve();
-				} catch (err) {
-					reject(err);
-				}
+				resolve();
 			} else {
 				const err = new Error(errors.join(""));
 				err.code = code;

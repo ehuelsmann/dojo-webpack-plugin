@@ -20,7 +20,7 @@ const nodeRequire = require.rawConfig && require.rawConfig.loaderPatch.nodeRequi
 const path = nodeRequire("path");
 const fs = nodeRequire("fs");
 
-var profilePath, dojoPath, featureOverrides = {};
+var profilePath, dojoPath, featureOverrides = {}, outputType = "cjs";
 process.argv.forEach((arg, i) => {
 	if (arg === '--profile') {
 		profilePath = process.argv[i+1];
@@ -28,6 +28,8 @@ process.argv.forEach((arg, i) => {
 		dojoPath = process.argv[i+1];
 	} else if (arg === '--has') {
 		featureOverrides = JSON.parse(process.argv[i+1]);
+	} else if (arg === '--outputType') {
+		outputType = process.argv[i+1];
 	}
 });
 if (!profilePath) {
@@ -72,6 +74,7 @@ var profile = (() => {
   return {
 			layerOptimize: false,
 			releaseDir: "./release",
+			outputType: outputType,
 
         packages:[{
             name:"dojo",
