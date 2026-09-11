@@ -1,0 +1,37 @@
+var path = require("path");
+var DojoWebpackPlugin = require("../../../../index");
+module.exports = [
+{
+	entry: "./index",
+	plugins: [
+		new DojoWebpackPlugin({
+			loaderConfig: require.resolve("./loaderConfig"),
+			buildEnvironment: {foopath: "test/foo"}
+		})
+	]
+},
+{
+	entry: "./index",
+	plugins: [
+		new DojoWebpackPlugin({
+			loaderConfig: function(env) {
+				return Object.assign(require("./loaderConfig")(env), {noConfigApi: 1, has:{'dojo-config-api':0}});
+			},
+			buildEnvironment: {foopath: "test/foo", noConfigApi:true},
+			environment: {noConfigApi: true},
+			noConsole: true,
+			loader: path.join(__dirname, "../../../js-esm/noconfig/dojo/dojo.js")
+		})
+	]
+},
+{
+	entry: "./index",
+	plugins: [
+		new DojoWebpackPlugin({
+			loaderConfig: require("./loaderConfig"),
+			buildEnvironment: {foopath: "test/foo", noConfigApi:false},
+			environment: {noConfigApi:false},
+			noConsole: true
+		})
+	]
+}];

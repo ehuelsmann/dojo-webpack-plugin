@@ -294,6 +294,10 @@ Note that the `globalContext` option is different than the Dojo loader config's 
 
 This property is optional and specifies the module path of the built Dojo loader.  See [Building the Dojo loader](#building-the-dojo-loader) for details.  If not specified, then the loader will be built as part of the Webpack build.
 
+### outputType
+
+This optional property controls how the embedded loader is emitted.  The default value is `"cjs"`.  Set it to `"esm"` to emit the embedded loader as an ES module.
+
 ### locales
 
 This property optional and specifies which locale resources should be included in the build.  The property is specified as an array of strings.  If not specified, then all available locales resources will be included.  If specified as an empty array, then only the default (root) locale resources will be included.
@@ -332,11 +336,14 @@ The tilde tells Webpack to resolve the import 'like a module'.  If you do not wa
 
 # Building the Dojo loader
 
-This plugin embeds a custom build of the Dojo loader (dojo.js) in your packed application.  The built loader is packaged as a CommonJS module so that it may be more easily consumed by Webpack.  The loader build profile specifies has.js features which exclude unneeded code (e.g. for loading modules) so that the loader embedded into the client is as small as possible (~1.5KB after uglify and gzip)<sup>[<a href="#user-content-foot1">1</a>]</sup>.  The Dojo loader builder requires that the Dojo util directory is a sibling of the `dojo` directory and is named either `util` or `dojo-util`.
+This plugin embeds a custom build of the Dojo loader (dojo.js) in your packed application.  By default, the built loader is packaged as a CommonJS module so that it may be more easily consumed by Webpack, but you can also request ESM output with the plugin's `outputType` option.  The loader build profile specifies has.js features which exclude unneeded code (e.g. for loading modules) so that the loader embedded into the client is as small as possible (~1.5KB after uglify and gzip)<sup>[<a href="#user-content-foot1">1</a>]</sup>.  The Dojo loader builder requires that the Dojo util directory is a sibling of the `dojo` directory and is named either `util` or `dojo-util`.
 
 If you do not want to build the Dojo loader every time Webpack is run, then you can build it manually and specify the location of the built loader using the [loader](#loader) option.  You can produce a manual build of the loader by running the build script in the buildDojo directory.
 
         node node_modules/dojo-webpack-plugin/buildDojo/build.js node_modules/dojo/dojo.js ./release
+
+        # append esm to emit an ES module wrapper
+        node node_modules/dojo-webpack-plugin/buildDojo/build.js node_modules/dojo/dojo.js ./release {} esm
 
 You can also build the loader from a Node script as shown below.
 
@@ -344,7 +351,8 @@ You can also build the loader from a Node script as shown below.
 const buildLoader = require('dojo-webpack-loader').buildLoader;
 buildLoader({
 	dojoPath: "node_modules/dojo/dojo.js",
-	releaseDir: "./release"
+	releaseDir: "./release",
+	outputType: "esm"
 }).then(() => {
   console.log("loader built");
 }).catch(err => {
@@ -362,7 +370,8 @@ plugins: [
 	new require("dojo-webpack-plugin")({
 		loaderConfig: require("./loaderConfig"),
 		locales: ["en"],
-		loader: path.join(__dirname, "./release/dojo/dojo.js")
+		loader: path.join(__dirname, "./release/dojo/dojo.js"),
+		outputType: "esm"
 	}),
 ]
 ```

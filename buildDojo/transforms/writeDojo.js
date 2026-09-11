@@ -53,8 +53,14 @@ define([
 		// the writeDojo transform...
 		try{
 			const version = JSON.stringify(JSON.parse(pkg).version);
+			const outputType = bc.outputType || "cjs";
+			const loaderBody = resource.getText() + ".call(this, userConfig, defaultConfig);";
 			// assemble and write the dojo layer
-			resource.uncompressedText = "module.exports = function(userConfig, defaultConfig, global, window) { this.loaderVersion = " + version + "; " + resource.getText() + ".call(this, userConfig, defaultConfig);};";
+			if (outputType === "esm") {
+				resource.uncompressedText = "function loader(userConfig, defaultConfig, global, window) { this.loaderVersion = " + version + "; " + loaderBody + "}\nloader.loaderVersion = " + version + ";\nexport default loader;";
+			} else {
+				resource.uncompressedText = "module.exports = function(userConfig, defaultConfig, global, window) { this.loaderVersion = " + version + "; " + loaderBody + "};";
+			}
 			doWrite(writeAmd.getDestFilename(resource), resource.uncompressedText);
 
 			onWriteComplete(0); // matches *1*

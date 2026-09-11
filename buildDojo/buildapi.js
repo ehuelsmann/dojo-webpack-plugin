@@ -37,7 +37,9 @@ function buildLoader(params) {
 			"--releaseDir",
 			path.resolve(params.releaseDir),
 			"--has",
-			JSON.stringify(params.has || {})
+			JSON.stringify(params.has || {}),
+			"--outputType",
+			params.outputType || "cjs"
 		],
 		{
 			silent: true
