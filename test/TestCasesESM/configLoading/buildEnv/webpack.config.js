@@ -7,8 +7,8 @@ module.exports = [
 		new DojoWebpackPlugin({
 			loaderConfig: require.resolve("./loaderConfig"),
 			environment: {foopath: "/foo", dojoRoot: "release"},
-			buildEnvironment: {foopath: "test/foo", dojoRoot:"../../../../node_modules"},
-			loader: path.join(__dirname, "../../../js/dojo/dojo.js")
+			buildEnvironment: {foopath: "test/foo", dojoRoot:"../../../../node_modules", noConfigApi:true},
+			loader: path.join(__dirname, "../../../js-esm/dojo/dojo.js")
 		})
 	]
 },
@@ -18,8 +18,8 @@ module.exports = [
 		new DojoWebpackPlugin({
 			loaderConfig: require("./loaderConfig"),
 			environment: {foopath: "/foo", dojoRoot: "release", noConfigApi:true},
-			buildEnvironment: {foopath: "test/foo", dojoRoot:"../../../../node_modules"},
-			loader: path.join(__dirname, "../../../js/noconfig/dojo/dojo.js")
+			buildEnvironment: {foopath: "test/foo", dojoRoot:"../../../../node_modules", noConfigApi:true},
+			loader: path.join(__dirname, "../../../js-esm/noconfig/dojo/dojo.js")
 		})
 	]
 },
@@ -34,7 +34,8 @@ module.exports = [
 				return config;
 			},
 			environment: {foopath: "/foo", dojoRoot: "release"},
-			buildEnvironment: {foopath: "test/foo", dojoRoot:"../../../../node_modules"}
+			buildEnvironment: {foopath: "test/foo", dojoRoot:"../../../../node_modules"},
+			loader: path.join(__dirname, "../../../js-esm/dojo/dojo.js")
 		})
 	]
 }];

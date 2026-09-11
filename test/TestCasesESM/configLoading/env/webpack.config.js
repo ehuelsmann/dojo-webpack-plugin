@@ -7,6 +7,7 @@ module.exports = [
 		new DojoWebpackPlugin({
 			loaderConfig: require.resolve("./loaderConfig"),
 			environment: {foopath: "test/foo"},
+			loader: path.join(__dirname, "../../../js-esm/dojo/dojo.js"),
 			noConsole: true
 		})
 	]
@@ -18,7 +19,7 @@ module.exports = [
 			loaderConfig: require("./loaderConfig"),
 			// dojo-config-api feature overriden by provided loader
 			environment: {foopath: "test/foo", has:{'dojo-config-api':1}, noConfigApi:true},
-			loader: path.join(__dirname, "../../../js/noconfig/dojo/dojo.js")
+			loader: path.join(__dirname, "../../../js-esm/noconfig/dojo/dojo.js")
 		})
 	]
 },
@@ -31,7 +32,8 @@ module.exports = [
 			loaderConfig: function(env) {
 				return Object.assign(require("./loaderConfig")(env), {has:{'dojo-config-api':1}});
 			},
-			environment: {foopath: "test/foo"}
+			environment: {foopath: "test/foo"},
+			loader: path.join(__dirname, "../../../js-esm/dojo/dojo.js")
 		})
 	]
 }];

@@ -37,8 +37,7 @@ var webpackMajorVersion = parseInt(require("webpack/package.json").version.split
 var testGroups = {
 	default: {},
 	djPropRenamed: {pluginOptions: {requireFnPropName: "djPropRenamed"}},
-	async: {pluginOptions: {async:true}},
-	esm: {pluginOptions: {outputType: "esm"}}
+	async: {pluginOptions: {async:true}}
 };
 
 describe("TestCases", () => {
@@ -65,7 +64,10 @@ function runTestCases(casesName) {
 		};
 	});
 	categories.forEach(function(category) {
-		Object.keys(testGroups).forEach(testGroup => {
+		const groups = casesName === "TestCasesESM" ? {
+			esm: {pluginOptions: {outputType: "esm"}}
+		} : testGroups;
+		Object.keys(groups).forEach(testGroup => {
 			describe(category.name + (testGroup ? (' - ' + testGroup) : ''), function() {
 				category.tests.forEach(function(testName) {
 					var suite = describe(testName, function() {});
@@ -104,7 +106,7 @@ function runTestCases(casesName) {
 							options.plugins.push(new ScopedRequirePlugin());
 							options.plugins.forEach(plugin => {
 								if (plugin instanceof DojoWebackPlugin) {
-									Object.assign(plugin.options, testGroups[testGroup].pluginOptions);
+									Object.assign(plugin.options, groups[testGroup].pluginOptions);
 								}
 							});
 							options.plugins.push(new MainTemplatePlugin());

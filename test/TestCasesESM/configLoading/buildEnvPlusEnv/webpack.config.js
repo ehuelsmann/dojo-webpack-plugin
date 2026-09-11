@@ -6,8 +6,7 @@ module.exports = [
 	plugins: [
 		new DojoWebpackPlugin({
 			loaderConfig: require.resolve("./loaderConfig"),
-			buildEnvironment: {foopath: "test/foo"},
-			loader: path.join(__dirname, "../../../js/dojo/dojo.js")
+			buildEnvironment: {foopath: "test/foo"}
 		})
 	]
 },
@@ -15,10 +14,13 @@ module.exports = [
 	entry: "./index",
 	plugins: [
 		new DojoWebpackPlugin({
-			loaderConfig: require("./loaderConfig"),
+			loaderConfig: function(env) {
+				return Object.assign(require("./loaderConfig")(env), {noConfigApi: 1, has:{'dojo-config-api':0}});
+			},
 			buildEnvironment: {foopath: "test/foo", noConfigApi:true},
 			environment: {noConfigApi: true},
-			noConsole: true
+			noConsole: true,
+			loader: path.join(__dirname, "../../../js-esm/noconfig/dojo/dojo.js")
 		})
 	]
 },
